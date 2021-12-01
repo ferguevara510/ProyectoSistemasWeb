@@ -1,0 +1,80 @@
+body {
+    font-family: 'Overpass', sans-serif;
+    font-weight: normal;
+    font-size: 100%;
+    color: #1b262c;
+    
+    margin: 5px;
+    background-color: #d9f4ec;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #5a76cf;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: #000000;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #78cf58;
+}
+
+.active {
+    background-color: #78cf58;
+}
+
+table{
+    width: 75%;
+    border-collapse: collapse;
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+  
+th {
+    font-size: 150%;
+    border-top: 4px solid #00a87c;
+    border-bottom: 4px solid #00a87c;
+}
+
+td {
+    border-bottom: 3px dashed #00a87c;
+}
+
+tbody td {
+    text-align: center;
+}
+  
+tfoot th {
+    text-align: right;
+}
+
+.boton_personalizado{
+    text-decoration: none;
+    padding: 10px;
+    color: #ffffff;
+    background-color: #1883ba;
+    border-radius: 6px;
+    border: 2px solid #0016b0;
+    float: right;
+    margin-right: 0;
+    margin-top: 5px;
+}
+
+.boton_personalizado:hover{
+    color: #000000;
+    background-color: #d9f4ec;
+}

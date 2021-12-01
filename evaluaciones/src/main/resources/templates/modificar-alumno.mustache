@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/css/regisAlum.css">
+        <title> Modificar Alumno </title>
+    </head>
+    <body>
+        <div>
+            <ul>
+                <li><a href="/examenesProfesor">Examenes</a></li>
+                <li><a href="/listaAlumnos">Alumnos</a></li>
+                <li style="float:right"><a class="active" href="/login">Cerrar sesión</a></li>
+            </ul>
+        </div>
+        <section class="form-register">
+            <div class="titulo">Modificar Alumno</div>
+            <form method="post" action="/modificarAlumno">
+            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Nombre" value="{{alumno.nombre}}">
+            <input class="controls" type="text" name="apellidoPaterno" id="apellidoPaterno" placeholder="Apellido Paterno" value="{{alumno.apellidoPaterno}}">
+            <input class="controls" type="text" name="apellidoMaterno" id="apellidoMaterno" placeholder="Apellido Materno" value="{{alumno.apellidoMaterno}}">
+            <input class="controls" type="text" name="matricula" id="matricula" placeholder="Matricula" value="{{alumno.matricula}}">
+            <input class="controls" type="text" name="contrasena" id="contrasena" placeholder="Contraseña">
+            <input class="controls" type="text" name="confirContrasena" id="confirContrasena" placeholder="Confirmar Contraseña">
+            <button type="submit" title="Ingresar" name="Ingresar">Modificar</button>
+            </form>
+        </section>
+    </body>
+</html>

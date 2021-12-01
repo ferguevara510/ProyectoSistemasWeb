@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title> Alumnos Profesor </title>    
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Overpass&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/css/examProf.css">
+        <style type="text/css"></style>
+    </head>
+    
+    <body>
+        <div>
+            <ul>
+                <li><a href="/examenesProfesor">Examenes</a></li>
+                <li><a href="/listaAlumnos">Alumnos</a></li>
+                <li style="float:right"><a class="active" href="/login">Cerrar sesión</a></li>
+            </ul>
+        </div>
+        <div>
+            <table summary="Examenes">
+                <thead>
+                    <tr>
+                        <th scope="col">ALUMNOS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#alumnos}}
+                        <tr>
+                            <td scope="row"><a href="/modificarAlumno/{{matricula}}">{{matricula}} - {{nombre}} - {{apellidoPaterno}} - {{apellidoMaterno}}</a></td>
+                        </tr>
+                    {{/alumnos}}
+                </tbody>
+                </tfoot>
+            </table>
+            <div>
+                <a href="/registrarAlumno"><button type="button" class="boton_personalizado">Registrar nuevo alumno</button></a>
+            </div>
+        </div>
+    </body>
+</html>

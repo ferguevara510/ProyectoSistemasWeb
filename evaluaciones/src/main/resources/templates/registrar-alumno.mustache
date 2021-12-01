@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/css/regisAlum.css">
+        <title> Registro Alumno </title>
+    </head>
+    <body>
+        <div>
+            <ul>
+                <li><a href="/examenesProfesor">Examenes</a></li>
+                <li><a href="/listaAlumnos">Alumnos</a></li>
+                <li style="float:right"><a class="active" href="/login">Cerrar sesión</a></li>
+            </ul>
+        </div>
+        <section class="form-register">
+            <div class="titulo">Registro Alumno</div>
+            <from method="post" action="/registrarAlumno">
+            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Nombre">
+            <input class="controls" type="text" name="apellidoPaterno" id="apellidoPaterno" placeholder="Apellido Paterno">
+            <input class="controls" type="text" name="apellidoMaterno" id="apellidoMaterno" placeholder="Apellido Materno">
+            <input class="controls" type="text" name="matricula" id="matricula" placeholder="Matricula">
+            <input class="controls" type="text" name="contrasena" id="contrasena" placeholder="Contraseña">
+            <button type="submit" title="Ingresar" name="Ingresar">Registrar</button>
+            </from>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title> Inicio de sesión Alumno </title>    
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+        <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Overpass&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/css/login.css">
+        <style type="text/css"></style>       
+    </head>
+    
+    <body>
+        <div id="contenedor">
+            <div id="central">
+                <div id="login">
+                    <div class="titulo">Inicio de sesión</div>
+                    <form id="loginform" method="post" action="/loginAlumno">
+                        <input type="text" name="matricula" placeholder="Matricula" required>
+                        <input type="password" placeholder="**********" name="password" required>
+                        <button type="submit" title="Ingresar" name="Ingresar">Iniciar sesión</button>
+                    </form>
+                </div>
+                <div class="inferior">
+                    <a href="/login">PROFESOR</a>
+                </div>
+            </div>
+        </div>            
+    </body>
+</html>
