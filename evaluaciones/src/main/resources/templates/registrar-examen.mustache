@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/css/examenes.css">
+        <title> Crear Examen </title>
+    </head>
+    <body>
+        <div>
+            <ul>
+                <li><a href="/examenesProfesor">Examenes</a></li>
+                <li><a href="/listaAlumnos">Alumnos</a></li>
+                <li style="float:right"><a class="active" href="/login">Cerrar sesión</a></li>
+            </ul>
+        </div>
+        <section class="form-register">
+            <div class="titulo">Crear examen</div>
+            <from method="post" action="/registrarExamen">
+            <label class="label-control" for="fechaInicio">Nombre</label>
+            <input class="controls" type="text" name="nombre" id="nombre" placeholder="Nombre">
+            <label class="label-control" for="fechaInicio">Fecha de Inicio</label>
+            <input class="controls" type="date" name="fechaInicio" id="fechaInicio" placeholder="Fecha de Inicio"/>
+            <label class="label-control" for="fechaInicio">Hora de Inicio</label>
+            <input class="controls" type="time" name="horaInicio" id="horaInicio" placeholder="Hora de Inicio"/>
+            <label class="label-control" for="fechaInicio">Fecha de fin</label>
+            <input class="controls" type="date" name="fechaFin" id="fechaFin" placeholder="Fecha Fin"/>
+            <label class="label-control" for="fechaInicio">Hora de fin</label>
+            <input class="controls" type="time" name="horaFin" id="horaFin" placeholder="Hora Fin"/>
+            <button type="submit" title="Ingresar" name="Ingresar">Registrar</button>
+            </from>
+        </section>
+    </body>
+</html>
