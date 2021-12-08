@@ -7,14 +7,11 @@ import java.util.Map;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
-import static spark.Spark.options;
-import static spark.Spark.before;
 import static spark.Spark.staticFileLocation;
 
 import spark.ModelAndView;
 import tc.web.evaluaciones.api.MustacheTemplateEngine;
 import tc.web.evaluaciones.model.Alumno;
-import tc.web.evaluaciones.model.Examen;
 import tc.web.evaluaciones.model.Profesor;
 
 import java.io.IOException;
@@ -33,24 +30,6 @@ public class App
         port(8080);
         staticFileLocation("/public");
 
-        options("/*", (request, response) -> {
-
-            String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
-            if (accessControlRequestHeaders != null) {
-                response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
-            }
-
-            String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
-            if (accessControlRequestMethod != null) {
-                response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
-            }
-
-            return "OK";
-        });
-
-        before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
-
-
         get("/login", (request, response) -> { 
             Map map = new HashMap<String,Object>(); 
             return new ModelAndView(map,"login.mustache"); 
@@ -64,11 +43,6 @@ public class App
         get("/examenesAlumnos", (request, response) -> { 
             Map map = new HashMap<String,Object>(); 
             return new ModelAndView(map,"examenes-alumnos.mustache"); 
-        }, new MustacheTemplateEngine());
-
-        get("/crearExamen", (request, response) -> { 
-            Map map = new HashMap<String,Object>(); 
-            return new ModelAndView(map,"registrar-examen.mustache"); 
         }, new MustacheTemplateEngine());
 
         post("/loginProfesor", (request, response) -> {
@@ -129,27 +103,6 @@ public class App
             Alumno.modificarAlumno(matricula, alumno);
 
             response.redirect("/modificarAlumno/"+matricula);
-            return true;
-        });
-        
-        post("/registrarExamen", (request, response) -> {
-            Examen examen = new Examen();
-            examen.setNombre(request.queryParams("nombre"));
-            String fechaInicio = request.queryParams("fechaInicio");
-            String fechaFin = request.queryParams("fechaFin");
-            String horaInicio = request.queryParams("horaInicio");
-            String horaFin = request.queryParams("horaFin");
-            examen.setFechaInicio(fechaInicio+" "+horaInicio);
-            examen.setFechaFin(fechaFin+" "+horaFin);
-
-
-            boolean validation = Examen.registrarExamen(examen);
-            if(validation){
-                response.redirect("/examenesProfesor");
-            }else{
-                response.redirect("/crearExamen");
-            }
-            
             return true;
         });
 
