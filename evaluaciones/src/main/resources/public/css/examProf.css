@@ -78,3 +78,70 @@ tfoot th {
     color: #000000;
     background-color: #d9f4ec;
 }
+
+.seccion-examen{
+    width: 70%;
+    margin: 40px auto 40px auto;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.data-examen{
+    
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    display: flex;
+    flex-flow: row;
+    width: 70%;
+    height: 50px;
+    font-size: 30px;
+}
+
+.boton-pregunta{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 50px;
+}
+
+.boton-pregunta > button{
+    background-color: #008CBA; /* Green */
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+.boton-pregunta > button > a{
+    color: #ffffff;
+    text-decoration: none;
+}
+.lista-preguntas{
+    width: 100%;
+    margin-top: 40px;
+}
+
+.lista-preguntas > span{
+    font-size: 20px;
+}
+
+.lista-preguntas > ul {
+    background-color: #d9f4ec;
+}
+
+.lista-preguntas > ul > li {
+    width: 100%;
+    
+}
+.lista-preguntas > ul > li > a{
+    text-align: left;
+    border-bottom: 1px solid #78cf58;
+}
+
+.lista-preguntas > ul > li:first-child > a{
+    border-top: 1px solid #78cf58;
+}

@@ -165,6 +165,22 @@ public class App
             return new ModelAndView(map,"alumnos-profesor.mustache"); 
         }, new MustacheTemplateEngine());
 
+        get("/listaExamenes/:usuario", (request, response) -> { 
+            Map map = new HashMap<String,Object>();
+            String folioExamen = request.params(":usuario");
+            List<Examen> examenes = Examen.listaExamenes(folioExamen);
+            map.put("examenes", examenes);
+            return new ModelAndView(map,"examenes-profesor.mustache"); 
+        }, new MustacheTemplateEngine());
+
+        get("/examen/:folio", (request, response) -> { 
+            Map map = new HashMap<String,Object>();
+            String folioExamen = request.params(":folio");
+            Examen examen = Examen.obtenerExamen(folioExamen);
+            map.put("examen", examen);
+            return new ModelAndView(map,"examenes-profesor.mustache"); 
+        }, new MustacheTemplateEngine());
+
         post("/registrarAlumno", (request, response) -> {
             String matricula = request.queryParams("matricula");
             String nombre = request.queryParams("nombre");

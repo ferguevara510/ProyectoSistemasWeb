@@ -2,7 +2,10 @@ package tc.web.evaluaciones.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import tc.web.evaluaciones.database.ConnectionDB;
 
@@ -78,6 +81,52 @@ public class Examen {
             }
         }
         return validacion;
+    }
+
+    public static List<Examen> listaExamenes(String usuario){
+        List<Examen> examenes = new ArrayList();
+        Examen examen = null;
+        Connection connection = ConnectionDB.createConnection();
+        try {
+            PreparedStatement query = connection.prepareStatement("select * from examen where usuario = ?");
+            query.setString(1, usuario);
+            
+            ResultSet result = query.executeQuery();
+            while(result.next()){
+                examen = new Examen();
+                examen.setFechaFin(result.getString("fin"));
+                examen.setFechaInicio(result.getString("inicio"));
+                examen.setFolioExamen(result.getInt("folioExamen"));
+                examen.setNombre(result.getString("nombre"));
+                examenes.add(examen);
+            }
+            result.close();
+        } catch (SQLException ex) {
+            
+        }
+        return examenes;
+    }
+
+    public static Examen obtenerExamen(String folioExamen){
+        Examen examen = null;
+        Connection connection = ConnectionDB.createConnection();
+        try {
+            PreparedStatement query = connection.prepareStatement("select * from examen where folioExamen = ?");
+            query.setString(1, folioExamen);
+
+            ResultSet result = query.executeQuery();
+            if(result.next()){
+                examen = new Examen();
+                examen.setFechaFin(result.getString("fin"));
+                examen.setFechaInicio(result.getString("inicio"));
+                examen.setFolioExamen(result.getInt("folioExamen"));
+                examen.setNombre(result.getString("nombre"));
+            }
+            result.close();
+        } catch (SQLException ex) {
+            
+        }
+        return examen;
     }
 
 }
