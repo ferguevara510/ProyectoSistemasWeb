@@ -1,5 +1,6 @@
 package tc.web.evaluaciones;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import spark.ModelAndView;
 import tc.web.evaluaciones.api.MustacheTemplateEngine;
 import tc.web.evaluaciones.model.Alumno;
 import tc.web.evaluaciones.model.Examen;
+import tc.web.evaluaciones.model.Pregunta;
 import tc.web.evaluaciones.model.Profesor;
 
 import java.io.IOException;
@@ -29,6 +31,8 @@ public class App
 {
     public static void main( String[] args )
     {
+        //Fer Guevara
+        //ItzNadia
         BasicConfigurator.configure();
         port(8080);
         staticFileLocation("/public");
@@ -177,8 +181,11 @@ public class App
             Map map = new HashMap<String,Object>();
             String folioExamen = request.params(":folio");
             Examen examen = Examen.obtenerExamen(folioExamen);
+            List<Pregunta> preguntas = Pregunta.buscarPreguntasDeExamen(folioExamen);
+
             map.put("examen", examen);
-            return new ModelAndView(map,"examenes-profesor.mustache"); 
+            map.put("preguntas", preguntas);
+            return new ModelAndView(map,"examen.mustache"); 
         }, new MustacheTemplateEngine());
 
         post("/registrarAlumno", (request, response) -> {
@@ -189,7 +196,17 @@ public class App
             String contraseña = request.queryParams("contrasena");
 
             Alumno.agregarAlumno(nombre, apellidoMaterno, apellidoPaterno, matricula, contraseña);
-            response.redirect("menu-principal-profesor.mustache");
+            response.redirect("/listaAlumnos");
+            return true;
+        });
+
+        post("/registrarPregunta/:folioExamen", (request, response) -> {
+            String folioExamen = request.queryParams(":folioExamen");
+            String tipo = request.queryParams("tipo");
+            String descripcion = request.queryParams("descripcion");
+
+            Pregunta.registrarPregunta(descripcion, tipo, folioExamen);
+            response.redirect("/examen/"+folioExamen);
             return true;
         });
     }
