@@ -10,17 +10,16 @@
     <body>
         <div>
             <ul>
-                <li><a href="/examenesProfesor">Examenes</a></li>
-                <li><a href="/listaAlumnos">Alumnos</a></li>
+                <li><a href="/examenesAlumnos">Examenes</a></li>
                 <li style="float:right"><a class="active" href="/login">Cerrar sesión</a></li>
             </ul>
         </div>
         <div class="seccion-examen">
             <div class="data-respuesta">
-                <form action="/registrarRespuesta/{{matricula}}/{{folioExamen}}/{{id}}" method="post">
+                <form action="/registrarRespuesta/{{matricula}}/{{folioExamen}}/{{pregunta.id}}" method="post">
                     <input type="hidden" name="pagina" value="{{pagina}}">
                     <fieldset>
-                        <legend>{{descripcion}}</legend>
+                        <legend>{{pregunta.descripcion}}</legend>
                         <div class="contenedor-respuestas">
                             {{#respuestas}}
                             <label>

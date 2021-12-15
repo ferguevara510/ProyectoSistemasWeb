@@ -43,7 +43,7 @@ public class Pregunta {
         Connection conexion = ConnectionDB.createConnection();
         try {
         PreparedStatement pst;
-        pst = conexion.prepareStatement("insert into pregunta(descipcion, tipo, folioExamen) values (?,?,?)");
+        pst = conexion.prepareStatement("insert into pregunta(descripcion, tipo, folioExamen) values (?,?,?)");
             pst.setString(1, descripcion);
             pst.setString(2, tipo);
             pst.setString(3, folioExamen);
@@ -87,12 +87,12 @@ public class Pregunta {
         return preguntas;
     }
 
-    public static Pregunta buscarPreguntaPorID(String id){
+    public static Pregunta buscarPreguntaPorID(int id){
         Pregunta pregunta = null;
         Connection connection = ConnectionDB.createConnection();
         try {
             PreparedStatement query = connection.prepareStatement("select * from pregunta where id = ?");
-            query.setString(1, id);
+            query.setInt(1, id);
             
             ResultSet result = query.executeQuery();
             if(result.next()){
@@ -128,8 +128,9 @@ public class Pregunta {
         Pregunta pregunta = null;
         Connection connection = ConnectionDB.createConnection();
         try {
-            PreparedStatement query = connection.prepareStatement("select * from pregunta where folioExamen = ? limit 1 offset = ?");
+            PreparedStatement query = connection.prepareStatement("select * from pregunta where folioExamen = ? limit 1 offset ?");
             query.setString(1, folioExamen);
+            query.setInt(2, pagina);
             
             ResultSet result = query.executeQuery();
             if(result.next()){
@@ -140,7 +141,8 @@ public class Pregunta {
             }
             result.close();
         } catch (SQLException ex) {
-            
+            System.out.println(ex.getMessage());
+            System.out.println("----------------------------------------------------------------------");
         }
         return pregunta;
     }

@@ -12,6 +12,7 @@ import static spark.Spark.before;
 import static spark.Spark.staticFileLocation;
 
 import spark.ModelAndView;
+import spark.Session;
 import tc.web.evaluaciones.api.MustacheTemplateEngine;
 import tc.web.evaluaciones.model.Alumno;
 import tc.web.evaluaciones.model.Examen;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.apache.log4j.BasicConfigurator;
+import org.eclipse.jetty.client.api.Response;
 
 public class App 
 {
@@ -52,7 +54,21 @@ public class App
             return "OK";
         });
 
-        before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+        before((request, response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+            String uri = request.uri();
+            String method = request.requestMethod();
+            Session sesion = request.session();
+            if(!uri.equals("/login") && uri.indexOf("css") == -1 && sesion.attribute("usuario") == null){
+                if(method.equals("GET") && !uri.equals("/loginAlumno")){
+                    if(sesion.attribute("matricula") == null){
+                        response.redirect("/login");
+                    }
+                    
+                }
+            }
+            
+        });
 
 
         get("/login", (request, response) -> { 
@@ -61,12 +77,19 @@ public class App
         }, new MustacheTemplateEngine());
 
         get("/examenesProfesor", (request, response) -> { 
-            Map map = new HashMap<String,Object>(); 
+            Map map = new HashMap<String,Object>();
+            String usuario = request.session().attribute("usuario");
+            List<Examen> examenes = Examen.listaExamenes(usuario);
+            map.put("examenes", examenes);
             return new ModelAndView(map,"examenes-profesor.mustache"); 
         }, new MustacheTemplateEngine());
 
         get("/examenesAlumnos", (request, response) -> { 
-            Map map = new HashMap<String,Object>(); 
+            Map map = new HashMap<String,Object>();
+            String matricula = request.session().attribute("matricula");
+            List<Examen> examenes = Examen.obtenerExamenesAlumnos(matricula);
+            map.put("examenes", examenes);
+            map.put("matricula", matricula);
             return new ModelAndView(map,"examenes-alumnos.mustache"); 
         }, new MustacheTemplateEngine());
 
@@ -82,16 +105,15 @@ public class App
             System.out.println(contraseña);
             Map map = new HashMap<String,Object>(); 
             boolean validacion = Profesor.iniciarSesion(usuario, contraseña);
-            String pantalla = "";
             if(validacion){
-                pantalla = "examenes-profesor.mustache";
-                response.status(200);
+                Session sesion = request.session(true);
+                sesion.attribute("usuario",usuario);
+                response.redirect("/examenesProfesor");
             }else{
-                pantalla = "login.mustache";
-                response.status(400);
+                response.redirect("/login");
             }
-            return new ModelAndView(map,pantalla);
-        },new MustacheTemplateEngine());
+            return true;
+        });
 
         post("/loginAlumno", (request, response) -> {
             String usuario = request.queryParams("matricula");
@@ -100,16 +122,15 @@ public class App
             System.out.println(contraseña);
             Map map = new HashMap<String,Object>(); 
             boolean validacion = Alumno.iniciarSesion(usuario, contraseña);
-            String pantalla = "";
             if(validacion){
-                pantalla = "examenes-alumnos.mustache";
-                response.status(200);
+                Session sesion = request.session(true);
+                sesion.attribute("matricula",usuario);
+                response.redirect("/examenesAlumnos");
             }else{
-                pantalla = "login.mustache";
-                response.status(400);
+                response.redirect("/loginAlumno");
             }
-            return new ModelAndView(map,pantalla);
-        },new MustacheTemplateEngine());
+            return true;
+        });
 
         get("/loginAlumno", (request, response) -> { 
             Map map = new HashMap<String,Object>(); 
@@ -146,8 +167,8 @@ public class App
             examen.setFechaInicio(fechaInicio+" "+horaInicio);
             examen.setFechaFin(fechaFin+" "+horaFin);
 
-
-            boolean validation = Examen.registrarExamen(examen);
+            Session sesion = request.session();
+            boolean validation = Examen.registrarExamen(examen,sesion.attribute("usuario"));
             if(validation){
                 response.redirect("/examenesProfesor");
             }else{
@@ -187,6 +208,13 @@ public class App
             map.put("preguntas", preguntas);
             return new ModelAndView(map,"examen.mustache"); 
         }, new MustacheTemplateEngine());
+        
+        get("/crearPregunta/:folio", (request, response) -> { 
+            Map map = new HashMap<String,Object>();
+            String folioExamen = request.params(":folio");
+            map.put("folioExamen", folioExamen);
+            return new ModelAndView(map,"registrar-pregunta.mustache"); 
+        }, new MustacheTemplateEngine());
 
         post("/registrarAlumno", (request, response) -> {
             String matricula = request.queryParams("matricula");
@@ -212,7 +240,7 @@ public class App
 
         get("/registrarRespuesta/:idPregunta", (request, response) -> {
             Map map = new HashMap<String, Object>();
-            String idPregunta = request.params(":idPregunta");
+            Integer idPregunta = Integer.parseInt(request.params(":idPregunta"));
             Pregunta pregunta = Pregunta.buscarPreguntaPorID(idPregunta);
             List<Respuesta> respuestas = Respuesta.buscarRespeustaDePreguntas(idPregunta);
 
@@ -224,17 +252,17 @@ public class App
             return new ModelAndView(map,"registrar-respuesta.mustache"); 
         }, new MustacheTemplateEngine());
 
-        post("registrarRespuesta/:idPregunta", (request, response) -> {
+        post("/registrarRespuesta/:idPregunta", (request, response) -> {
             String idPregunta = request.params(":idPregunta");
             String descripcion = request.queryParams("descripcion");
             String correcto = request.queryParams("correcto");
 
-            Respuesta.registrarRespuesta(descripcion, correcto == "true", idPregunta);
+            Respuesta.registrarRespuesta(descripcion, correcto.equals("on"), idPregunta);
             response.redirect("/registrarRespuesta/"+idPregunta);
             return true;
         });
 
-        get("alumnoExamenes/:matricula", (request, response) -> {
+        get("/alumnoExamenes/:matricula", (request, response) -> {
             Map map = new HashMap<String, Object>();
             String matricula = request.params(":matricula");
             List<Examen> examenes = Examen.obtenerExamenesAlumnos(matricula);
@@ -243,7 +271,7 @@ public class App
             return new ModelAndView(map,"examenes-alumnos.mustache"); 
         }, new MustacheTemplateEngine());
 
-        get("presentarExamen/:matricula/:folioExamen/:pagina",(request,response)->{
+        get("/presentarExamen/:matricula/:folioExamen/:pagina",(request,response)->{
             Map map = new HashMap<String,Object>();
             String matricula = request.params(":matricula");
             String folioExamen = request.params(":folioExamen");
@@ -260,21 +288,21 @@ public class App
                 map.put("respuestas", respuestas);
                 mustache = "pregunta.mustache";
             }else{
-                double calificacion = 0.0;
+                double calificacion = Examen.generarCalificacion(Integer.parseInt(folioExamen), matricula);
                 map.put("calificacion", calificacion);
             }
 
             return new ModelAndView(map,mustache); 
         }, new MustacheTemplateEngine());
 
-        post("registrarRespuesta/:matricula/:folioExamen/:idPregunta", (request, response) ->{
+        post("/registrarRespuesta/:matricula/:folioExamen/:idPregunta", (request, response) ->{
             String matricula = request.params(":matricula");
             Integer idPregunta = Integer.parseInt(request.params(":idPregunta"));
             Integer folioExamen = Integer.parseInt(request.params(":folioExamen"));
             Integer idRespuesta = Integer.parseInt(request.queryParams("respuesta"));
             Integer pagina = Integer.parseInt(request.queryParams("pagina"));
             Pregunta.registrarRespuesta(matricula, folioExamen, idPregunta, idRespuesta);
-            response.redirect("presentarExamen/"+matricula+"/"+folioExamen+"/"+(pagina++));
+            response.redirect("/presentarExamen/"+matricula+"/"+folioExamen+"/"+(pagina+1));
             return true;
         });
     }

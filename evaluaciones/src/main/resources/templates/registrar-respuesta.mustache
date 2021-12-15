@@ -17,7 +17,7 @@
         </div>
         <div class="seccion-examen">
             <div class="data-pregunta">
-                <div class="pregunta"><strong>{{descripcion}}</strong></div>
+                <div class="pregunta"><strong>{{pregunta.descripcion}}</strong></div>
             </div>
             {{^mostrarRespuesta}}
             <div class="lista-preguntas">
@@ -25,9 +25,9 @@
                 <ul>
                     {{#respuestas}}
                     <li class="descripcion-respuesta">{{descripcion}}</li>
-                    {{/respuesta}}
+                    {{/respuestas}}
                     <li class="registro-respuesta">
-                        <form method="post" action="registrarRespuesta/{{idPregunta}}">
+                        <form method="post" action="/registrarRespuesta/{{idPregunta}}">
                             <input type="text" name="descripcion">
                             <input type="checkbox" name="correcto">
                             <button type="submit" title="Ingresar" name="Ingresar">Registrar</button>

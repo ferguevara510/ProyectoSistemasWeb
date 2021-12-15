@@ -13,7 +13,7 @@
     <body>
         <div>
             <ul>
-                <li><a href="/examenesProfesor">Examenes</a></li>
+                <li><a href="/examenesAlumnos">Examenes</a></li>
                 <li style="float:right"><a class="active" href="/loginAlumno">Cerrar sesión</a></li>
             </ul>
         </div>
@@ -28,7 +28,7 @@
                 <tbody>
                     {{#examenes}}
                     <tr>
-                        <td scope="row">{{^realizado}}<a href="/presentarExamen/{{matricula}}/{{folioExamen}}/1">{{/realizado}}{{nombre}}{{^realizado}}</a>{{/realizado}}</td>
+                        <td scope="row">{{^realizado}}<a href="/presentarExamen/{{matricula}}/{{folioExamen}}/0">{{/realizado}}{{nombre}}{{^realizado}}</a>{{/realizado}}</td>
                         <td>{{calificacion}}</td>
                     </tr>
                     {{/examenes}}

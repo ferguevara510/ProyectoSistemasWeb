@@ -52,7 +52,7 @@ public class Respuesta {
         Connection conexion = ConnectionDB.createConnection();
         try {
         PreparedStatement pst;
-        pst = conexion.prepareStatement("insert into respuesta(descipcion, correcto, idPregunta) values (?,?,?)");
+        pst = conexion.prepareStatement("insert into respuesta(descripcion, correcto, idPregunta) values (?,?,?)");
             pst.setString(1, descripcion);
             pst.setBoolean(2, correcto);
             pst.setString(3, idPregunta);

@@ -65,16 +65,16 @@ public class Examen {
         this.fechaFin = fechaFin;
     }
 
-    public static boolean registrarExamen(Examen examen){
+    public static boolean registrarExamen(Examen examen, String usuario){
         boolean validacion = false;
         Connection con = ConnectionDB.createConnection();
         try {
         PreparedStatement pst;
-        pst = con.prepareStatement("insert into examen(nombre, calificacion, inicio, fin, usuario) values (?,?,?,?,'Profesor')");
+        pst = con.prepareStatement("insert into examen(nombre, inicio, fin, usuario) values (?,?,?,?)");
             pst.setString(1, examen.getNombre());
-            pst.setInt(2, 0);
-            pst.setString(3, examen.getFechaInicio());
-            pst.setString(4, examen.getFechaFin());
+            pst.setString(2, examen.getFechaInicio());
+            pst.setString(3, examen.getFechaFin());
+            pst.setString(4, usuario);
             pst.execute();
             pst.close();
             validacion = true;
@@ -143,8 +143,9 @@ public class Examen {
         Examen examen = null;
         Connection connection = ConnectionDB.createConnection();
         try {
-            PreparedStatement query = connection.prepareStatement("select e.folioExamen as folioExamen, e.fin as fin, e.inicio as inicio, e.nombre as nombre, a.calificacion as calificacion, a.realizado as realizado from examen e, examen_alumno a where e.folioExamen = a.folioExamen and matricula = ?");
+            PreparedStatement query = connection.prepareStatement("select *, (select calificacion from examen_alumno a where a.matricula = ? and e.folioExamen = a.folioExamen) as calificacion, (select realizado from examen_alumno a where a.matricula = ? and e.folioExamen = a.folioExamen) as realizado from examen e;");
             query.setString(1, matricula);
+            query.setString(2, matricula);
             
             ResultSet result = query.executeQuery();
             while(result.next()){
@@ -162,6 +163,46 @@ public class Examen {
             
         }
         return examenes;
+    }
+
+    public static double generarCalificacion(Integer folioExamen, String matricula){
+        return Examen.obtenerTotalAciertos(matricula)/obtenerTotalPreguntas(folioExamen);
+    }
+
+    public static int obtenerTotalPreguntas(Integer folioExamen){
+        int total = 0;
+        Connection connection = ConnectionDB.createConnection();
+        try {
+            PreparedStatement query = connection.prepareStatement("select count(*) as total from pregunta where folioExamen = ?");
+            query.setInt(1, folioExamen);
+
+            ResultSet result = query.executeQuery();
+            if(result.next()){
+                total = result.getInt("total");
+            }
+            result.close();
+        } catch (SQLException ex) {
+            
+        }
+        return total;
+    }
+    
+    public static int obtenerTotalAciertos(String matricula){
+        int aciertos = 0;
+        Connection connection = ConnectionDB.createConnection();
+        try {
+            PreparedStatement query = connection.prepareStatement("select count(*) as aciertos from respuesta r, respuesta_pregunta p where r.correcto = true and matricula = ? and r.id = p.idRespuesta");
+            query.setString(1, matricula);
+
+            ResultSet result = query.executeQuery();
+            if(result.next()){
+                aciertos = result.getInt("aciertos");
+            }
+            result.close();
+        } catch (SQLException ex) {
+            
+        }
+        return aciertos;
     }
 
 }

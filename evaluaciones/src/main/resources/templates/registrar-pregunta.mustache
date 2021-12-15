@@ -17,7 +17,7 @@
         </div>
         <section class="form-register">
             <div class="titulo">Crear Pregunta</div>
-            <from method="post" action="/registrarPregunta/{{folioExamen}}">
+            <form method="post" action="/registrarPregunta/{{folioExamen}}">
                 <input class="controls" type="text" name="descripcion" placeholder="Pregunta">
                 <select class="controls" name="tipo" placeholder="Tipo pregunta">
                     <option value="multiple">Opcion multiple</option>
@@ -25,7 +25,7 @@
                 </select>
                 
                 <button type="submit" title="Ingresar" name="Ingresar">Registrar</button>
-            </from>
+            </form>
         </section>
     </body>
 </html>

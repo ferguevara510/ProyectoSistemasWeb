@@ -17,17 +17,17 @@
         </div>
         <div class="seccion-examen">
             <div class="data-examen">
-                <div><strong>{{nombre}}</strong></div>
-                <div><strong> De {{fechaInicio}} a {{fechaFin}}</strong></div>
+                <div><strong>{{examen.nombre}}</strong></div>
+                <div><strong> De {{examen.fechaInicio}} a {{examen.fechaFin}}</strong></div>
             </div>
             <div class="boton-pregunta">
-                <button class="boton-primario"><a href="/crearPregunta/{{folioExamen}}">Agregar pregunta</a></button>
+                <button class="boton-primario"><a href="/crearPregunta/{{examen.folioExamen}}">Agregar pregunta</a></button>
             </div>
             <div class="lista-preguntas">
                 <span><strong>Preguntas</strong></span>
                 <ul>
                     {{#preguntas}}
-                    <li class="nombre-pregunta"><a href="/pregunta/{{id}}">{{descripcion}}</a></li>
+                    <li class="nombre-pregunta"><a href="/registrarRespuesta/{{id}}">{{descripcion}}</a></li>
                     {{/preguntas}}
                 </ul>
             </div>
