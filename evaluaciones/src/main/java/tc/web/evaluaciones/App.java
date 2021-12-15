@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.MultipartConfigElement;
+
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
 import static spark.Spark.options;
 import static spark.Spark.before;
 import static spark.Spark.staticFileLocation;
+import static spark.Spark.staticFiles;
 
 import spark.ModelAndView;
 import spark.Session;
@@ -20,14 +23,18 @@ import tc.web.evaluaciones.model.Pregunta;
 import tc.web.evaluaciones.model.Profesor;
 import tc.web.evaluaciones.model.Respuesta;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.apache.log4j.BasicConfigurator;
-import org.eclipse.jetty.client.api.Response;
 
 public class App 
 {
@@ -38,6 +45,9 @@ public class App
         BasicConfigurator.configure();
         port(8080);
         staticFileLocation("/public");
+        File uploadDir = new File("upload");
+        uploadDir.mkdir(); // create the upload directory if it doesn't exist
+        staticFiles.externalLocation("upload");
 
         options("/*", (request, response) -> {
 
@@ -252,10 +262,13 @@ public class App
             return new ModelAndView(map,"registrar-respuesta.mustache"); 
         }, new MustacheTemplateEngine());
 
-        post("/asignarRespuesta/:idPregunta", (request, response) -> {
+        post("/registrarRespuesta/:idPregunta", (request, response) -> {
             String idPregunta = request.params(":idPregunta");
             String descripcion = request.queryParams("descripcion");
             String correcto = request.queryParams("correcto");
+            if(correcto == null){
+                correcto = "off";
+            }
 
             Respuesta.registrarRespuesta(descripcion, correcto.equals("on"), idPregunta);
             response.redirect("/registrarRespuesta/"+idPregunta);
@@ -305,6 +318,38 @@ public class App
             response.redirect("/presentarExamen/"+matricula+"/"+folioExamen+"/"+(pagina+1));
             return true;
         });
+
+        post("/upload/:matricula/:folioExamen/:idPregunta/:pagina", (request, response)->{
+            String matricula = request.params(":matricula");
+            Integer idPregunta = Integer.parseInt(request.params(":idPregunta"));
+            Integer folioExamen = Integer.parseInt(request.params(":folioExamen"));
+            Integer pagina = Integer.parseInt(request.params(":pagina"));
+            Path tempFile = Files.createTempFile(uploadDir.toPath(), "", "");
+            
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+            
+            try (InputStream input = request.raw().getPart("videoGrabado").getInputStream()) { // getPart needs to use same "name" as input field in form
+                Files.copy(input, tempFile, StandardCopyOption.REPLACE_EXISTING);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            // Pregunta.registrarRespuestaMultimedia(matricula, folioExamen, idPregunta, tempFile.getFileName().toString());
+            
+            return  "/presentarExamen/"+matricula+"/"+folioExamen+"/"+(pagina+1);
+        });
+
+        get("/upload/:matricula/:folioExamen/:idPregunta/:pagina",(request,response) ->{
+            Map map = new HashMap<String,Object>();
+            String matricula = request.params(":matricula");
+            Integer idPregunta = Integer.parseInt(request.params(":idPregunta"));
+            Integer folioExamen = Integer.parseInt(request.params(":folioExamen"));
+            Integer pagina = Integer.parseInt(request.params(":pagina"));
+            map.put("matricula", matricula);
+            map.put("idPregunta", idPregunta);
+            map.put("folioExamen", folioExamen);
+            map.put("pagina", pagina);
+            return new ModelAndView(map,"multimedia.mustache"); 
+        }, new MustacheTemplateEngine());
     }
 
     public static String dataToJson(Object data) {
