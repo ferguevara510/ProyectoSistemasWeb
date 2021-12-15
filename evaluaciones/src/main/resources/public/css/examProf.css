@@ -196,3 +196,12 @@ input {
     font-family: 'Overpass', sans-serif;
     color: #E4E4E4;
 }
+
+.contenedor-respuestas {
+    margin: 5px;
+}
+
+.contenedor-boton {
+    margin-top: 10px;
+    margin-left: 55px;
+}

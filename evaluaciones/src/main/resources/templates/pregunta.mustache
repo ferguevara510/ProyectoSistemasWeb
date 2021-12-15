@@ -18,17 +18,22 @@
             <div class="data-respuesta">
                 <form action="/registrarRespuesta/{{matricula}}/{{folioExamen}}/{{pregunta.id}}" method="post">
                     <input type="hidden" name="pagina" value="{{pagina}}">
-                    <fieldset>
-                        <legend>{{pregunta.descripcion}}</legend>
-                        <div class="contenedor-respuestas">
-                            {{#respuestas}}
-                            <label>
-                                <input type="radio" name="respuesta" value="{{id}}"> {{descripcion}}
-                            </label>
-                            {{/respuestas}}
+                    
+                    <div class="contenedor-respuestas">
+                        <fieldset>
+                            <legend>{{pregunta.descripcion}}</legend>
+                            <div class="contenedor-respuestas">
+                                {{#respuestas}}
+                                <label>
+                                    <input type="radio" name="respuesta" value="{{id}}"> {{descripcion}}
+                                </label>
+                                {{/respuestas}}
+                            </div>
+                        </fieldset>
+                        <div class="contenedor-boton">
+                            <button type="submit" class="boton_pregunta" title="Responder3" name="Ingresar">Responder</button>
                         </div>
-                    </fieldset>
-                    <button type="submit" title="Responder" name="Ingresar">Responder</button>
+                    </div>
                 </form>
             </div>
         </div>
