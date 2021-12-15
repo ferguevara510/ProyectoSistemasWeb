@@ -21,7 +21,6 @@ INSERT INTO profesor (usuario, contrasena) VALUES ('Profesor', '12345');
 CREATE TABLE IF NOT EXISTS examen (
 	folioExamen int(5) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nombre varchar(30) NOT NULL,
-	calificacion float NULL,
 	inicio datetime NOT NULL,
 	fin datetime NOT NULL,
 	usuario varchar(10) NULL,
@@ -41,7 +40,26 @@ CREATE TABLE IF NOT EXISTS respuesta (
 	id int(5) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	idPregunta int(5) NULL,
 	descripcion varchar(1000) NOT NULL,
-    folioExamen int(5) NULL,
     correcto TINYINT(1) NULL,
+	FOREIGN KEY (idPregunta) REFERENCES pregunta (id)
+);
+
+CREATE TABLE IF NOT EXISTS examen_alumno (
+	folioExamen int(5) NULL,
+	matricula varchar(10) NULL,
+	calificacion DOUBLE NULL DEFAULT 0.00,
+    realizado TINYINT(1) NULL DEFAULT 0,
+	FOREIGN KEY (folioExamen) REFERENCES examen (folioExamen),
+	FOREIGN KEY (matricula) REFERENCES alumno (matricula)
+);
+
+
+CREATE TABLE IF NOT EXISTS respuesta_pregunta (
+	folioExamen int(5) NULL,
+	idRespuesta int(5) NULL,
+	idPregunta int(5) NULL,
+	matricula varchar(10) NULL,
+	FOREIGN KEY (folioExamen) REFERENCES examen (folioExamen),
+	FOREIGN KEY (idRespuesta) REFERENCES respuesta (id),
 	FOREIGN KEY (idPregunta) REFERENCES pregunta (id)
 );

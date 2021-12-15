@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="/css/examProf.css">
+        <title> Pregunta {{pagina}} </title>
+    </head>
+    <body>
+        <div>
+            <ul>
+                <li><a href="/examenesProfesor">Examenes</a></li>
+                <li><a href="/listaAlumnos">Alumnos</a></li>
+                <li style="float:right"><a class="active" href="/login">Cerrar sesión</a></li>
+            </ul>
+        </div>
+        <div class="seccion-examen">
+            <div class="data-respuesta">
+                <form action="/registrarRespuesta/{{matricula}}/{{folioExamen}}/{{id}}" method="post">
+                    <input type="hidden" name="pagina" value="{{pagina}}">
+                    <fieldset>
+                        <legend>{{descripcion}}</legend>
+                        <div class="contenedor-respuestas">
+                            {{#respuestas}}
+                            <label>
+                                <input type="radio" name="respuesta" value="{{id}}"> {{descripcion}}
+                            </label>
+                            {{/respuestas}}
+                        </div>
+                    </fieldset>
+                    <button type="submit" title="Responder" name="Ingresar">Responder</button>
+                </form>
+            </div>
+        </div>
+        
+    </body>
+</html>

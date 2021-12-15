@@ -87,7 +87,6 @@ tfoot th {
 }
 
 .data-examen{
-    
     display: flex;
     justify-content: left;
     align-items: center;
@@ -96,6 +95,21 @@ tfoot th {
     width: 70%;
     height: 50px;
     font-size: 30px;
+}
+
+.data-pregunta{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    display: flex;
+    flex-flow: row;
+    width: 100%;
+    height: 50px;
+    font-size: 40px;
+}
+
+.data-examen .pregunta{
+    width: 100%;
 }
 
 .boton-pregunta{
@@ -144,4 +158,9 @@ tfoot th {
 
 .lista-preguntas > ul > li:first-child > a{
     border-top: 1px solid #78cf58;
+}
+
+.data-respuesta{
+    display: flex;
+    flex-flow: column;
 }

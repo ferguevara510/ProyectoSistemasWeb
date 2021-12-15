@@ -11,10 +11,19 @@ import tc.web.evaluaciones.database.ConnectionDB;
 
 public class Examen {
     private String nombre;
-    private float calificacion;
+    private double calificacion;
     private int folioExamen;
     private String fechaInicio;
     private String fechaFin;
+    private boolean realizado;
+
+    public boolean isRealizado() {
+        return this.realizado;
+    }
+
+    public void setRealizado(boolean realizado) {
+        this.realizado = realizado;
+    }
 
     public String getNombre() {
         return this.nombre;
@@ -24,11 +33,11 @@ public class Examen {
         this.nombre = nombre;
     }
 
-    public float getCalificacion() {
+    public double getCalificacion() {
         return this.calificacion;
     }
 
-    public void setCalificacion(float calificacion) {
+    public void setCalificacion(double calificacion) {
         this.calificacion = calificacion;
     }
 
@@ -127,6 +136,32 @@ public class Examen {
             
         }
         return examen;
+    }
+
+    public static List<Examen> obtenerExamenesAlumnos(String matricula){
+        List<Examen> examenes = new ArrayList<>();
+        Examen examen = null;
+        Connection connection = ConnectionDB.createConnection();
+        try {
+            PreparedStatement query = connection.prepareStatement("select e.folioExamen as folioExamen, e.fin as fin, e.inicio as inicio, e.nombre as nombre, a.calificacion as calificacion, a.realizado as realizado from examen e, examen_alumno a where e.folioExamen = a.folioExamen and matricula = ?");
+            query.setString(1, matricula);
+            
+            ResultSet result = query.executeQuery();
+            while(result.next()){
+                examen = new Examen();
+                examen.setFechaFin(result.getString("fin"));
+                examen.setFechaInicio(result.getString("inicio"));
+                examen.setFolioExamen(result.getInt("folioExamen"));
+                examen.setNombre(result.getString("nombre"));
+                examen.setCalificacion(result.getFloat("calificacion"));
+                examen.setRealizado(result.getBoolean("realizado"));
+                examenes.add(examen);
+            }
+            result.close();
+        } catch (SQLException ex) {
+            
+        }
+        return examenes;
     }
 
 }

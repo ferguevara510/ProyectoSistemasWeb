@@ -1,6 +1,5 @@
 package tc.web.evaluaciones;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +17,7 @@ import tc.web.evaluaciones.model.Alumno;
 import tc.web.evaluaciones.model.Examen;
 import tc.web.evaluaciones.model.Pregunta;
 import tc.web.evaluaciones.model.Profesor;
+import tc.web.evaluaciones.model.Respuesta;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -201,12 +201,80 @@ public class App
         });
 
         post("/registrarPregunta/:folioExamen", (request, response) -> {
-            String folioExamen = request.queryParams(":folioExamen");
+            String folioExamen = request.params(":folioExamen");
             String tipo = request.queryParams("tipo");
             String descripcion = request.queryParams("descripcion");
 
             Pregunta.registrarPregunta(descripcion, tipo, folioExamen);
             response.redirect("/examen/"+folioExamen);
+            return true;
+        });
+
+        get("/registrarRespuesta/:idPregunta", (request, response) -> {
+            Map map = new HashMap<String, Object>();
+            String idPregunta = request.params(":idPregunta");
+            Pregunta pregunta = Pregunta.buscarPreguntaPorID(idPregunta);
+            List<Respuesta> respuestas = Respuesta.buscarRespeustaDePreguntas(idPregunta);
+
+            map.put("pregunta", pregunta);
+            map.put("idPregunta", idPregunta);
+            map.put("respuestas", respuestas);
+            map.put("mostrarRespuesta", pregunta.getTipo() == "multiple");
+
+            return new ModelAndView(map,"registrar-respuesta.mustache"); 
+        }, new MustacheTemplateEngine());
+
+        post("registrarRespuesta/:idPregunta", (request, response) -> {
+            String idPregunta = request.params(":idPregunta");
+            String descripcion = request.queryParams("descripcion");
+            String correcto = request.queryParams("correcto");
+
+            Respuesta.registrarRespuesta(descripcion, correcto == "true", idPregunta);
+            response.redirect("/registrarRespuesta/"+idPregunta);
+            return true;
+        });
+
+        get("alumnoExamenes/:matricula", (request, response) -> {
+            Map map = new HashMap<String, Object>();
+            String matricula = request.params(":matricula");
+            List<Examen> examenes = Examen.obtenerExamenesAlumnos(matricula);
+            map.put("examenes", examenes);
+            map.put("matricula", matricula);
+            return new ModelAndView(map,"examenes-alumnos.mustache"); 
+        }, new MustacheTemplateEngine());
+
+        get("presentarExamen/:matricula/:folioExamen/:pagina",(request,response)->{
+            Map map = new HashMap<String,Object>();
+            String matricula = request.params(":matricula");
+            String folioExamen = request.params(":folioExamen");
+            Integer pagina = Integer.parseInt(request.params(":pagina"));
+
+            Pregunta pregunta = Pregunta.preguntaActual(folioExamen, pagina);
+            String mustache = "resultado-examen.mustache";
+            if(pregunta != null){
+                map.put("pregunta", pregunta);
+                map.put("pagina", pagina);
+                map.put("folioExamen", folioExamen);
+                map.put("matricula", matricula);
+                List<Respuesta> respuestas = Respuesta.buscarRespeustaDePreguntas(pregunta.getId());
+                map.put("respuestas", respuestas);
+                mustache = "pregunta.mustache";
+            }else{
+                double calificacion = 0.0;
+                map.put("calificacion", calificacion);
+            }
+
+            return new ModelAndView(map,mustache); 
+        }, new MustacheTemplateEngine());
+
+        post("registrarRespuesta/:matricula/:folioExamen/:idPregunta", (request, response) ->{
+            String matricula = request.params(":matricula");
+            Integer idPregunta = Integer.parseInt(request.params(":idPregunta"));
+            Integer folioExamen = Integer.parseInt(request.params(":folioExamen"));
+            Integer idRespuesta = Integer.parseInt(request.queryParams("respuesta"));
+            Integer pagina = Integer.parseInt(request.queryParams("pagina"));
+            Pregunta.registrarRespuesta(matricula, folioExamen, idPregunta, idRespuesta);
+            response.redirect("presentarExamen/"+matricula+"/"+folioExamen+"/"+(pagina++));
             return true;
         });
     }
