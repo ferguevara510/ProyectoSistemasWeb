@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS pregunta (
 	id int(5) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	descripcion varchar(1000) NOT NULL,
 	tipo varchar(100) NOT NULL,
-    folioExamen int(5) NULL,
+	folioExamen int(5) NULL,
 	FOREIGN KEY (folioExamen) REFERENCES examen (folioExamen)
 );
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS respuesta (
 	id int(5) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	idPregunta int(5) NULL,
 	descripcion varchar(1000) NOT NULL,
-    correcto TINYINT(1) NULL,
+      correcto TINYINT(1) NULL,
 	FOREIGN KEY (idPregunta) REFERENCES pregunta (id)
 );
 
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS examen_alumno (
 	folioExamen int(5) NULL,
 	matricula varchar(10) NULL,
 	calificacion DOUBLE NULL DEFAULT 0.00,
-    realizado TINYINT(1) NULL DEFAULT 0,
+      realizado TINYINT(1) NULL DEFAULT 0,
 	FOREIGN KEY (folioExamen) REFERENCES examen (folioExamen),
 	FOREIGN KEY (matricula) REFERENCES alumno (matricula)
 );

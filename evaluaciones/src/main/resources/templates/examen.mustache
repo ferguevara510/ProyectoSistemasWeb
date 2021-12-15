@@ -16,13 +16,12 @@
             </ul>
         </div>
         <div class="seccion-examen">
-            <div class="data-examen">
-                <div><strong>{{examen.nombre}}</strong></div>
-                <div><strong> De {{examen.fechaInicio}} a {{examen.fechaFin}}</strong></div>
-            </div>
-            <div class="boton-pregunta">
-                <button class="boton-primario"><a href="/crearPregunta/{{examen.folioExamen}}">Agregar pregunta</a></button>
-            </div>
+            <table>
+                <thead>
+                    <tr><th colspan="3" scope="col">{{examen.nombre}}</th></hr>
+                    <tr><th colspan="3" scope="col"> De {{examen.fechaInicio}} a {{examen.fechaFin}}</th></tr>
+                </thead>
+            </table>
             <div class="lista-preguntas">
                 <span><strong>Preguntas</strong></span>
                 <ul>
@@ -31,6 +30,9 @@
                     {{/preguntas}}
                 </ul>
             </div>
+        </div>
+        <div>
+            <button type="button" class="boton_personalizado"><a href="/crearPregunta/{{examen.folioExamen}}">Agregar pregunta</a></button>
         </div>
         
     </body>

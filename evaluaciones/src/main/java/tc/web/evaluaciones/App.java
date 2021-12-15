@@ -252,7 +252,7 @@ public class App
             return new ModelAndView(map,"registrar-respuesta.mustache"); 
         }, new MustacheTemplateEngine());
 
-        post("/registrarRespuesta/:idPregunta", (request, response) -> {
+        post("/asignarRespuesta/:idPregunta", (request, response) -> {
             String idPregunta = request.params(":idPregunta");
             String descripcion = request.queryParams("descripcion");
             String correcto = request.queryParams("correcto");

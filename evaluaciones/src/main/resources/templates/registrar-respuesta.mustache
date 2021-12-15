@@ -16,9 +16,11 @@
             </ul>
         </div>
         <div class="seccion-examen">
-            <div class="data-pregunta">
-                <div class="pregunta"><strong>{{pregunta.descripcion}}</strong></div>
-            </div>
+            <table>
+                <thead>
+                    <tr><th colspan="3" scope="col">{{pregunta.descripcion}}</th></hr>
+                </thead>
+            </table>
             {{^mostrarRespuesta}}
             <div class="lista-preguntas">
                 <span><strong>Respuestas</strong></span>
@@ -27,10 +29,10 @@
                     <li class="descripcion-respuesta">{{descripcion}}</li>
                     {{/respuestas}}
                     <li class="registro-respuesta">
-                        <form method="post" action="/registrarRespuesta/{{idPregunta}}">
-                            <input type="text" name="descripcion">
+                        <form method="post" action="/asignarRespuesta/{{idPregunta}}">
+                            <input type="text" class="input_perzonalizado" name="descripcion">
                             <input type="checkbox" name="correcto">
-                            <button type="submit" title="Ingresar" name="Ingresar">Registrar</button>
+                            <button type="submit" class="boton_pregunta" title="Ingresar" name="Ingresar">Registrar</button>
                         </form>
                     </li>
                 </ul>
