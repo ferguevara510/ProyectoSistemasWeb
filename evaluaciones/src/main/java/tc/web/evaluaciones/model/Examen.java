@@ -168,7 +168,7 @@ public class Examen {
     public static double generarCalificacion(Integer folioExamen, String matricula){
         int total = Examen.obtenerTotalPreguntas(folioExamen);
         int aciertos = Examen.obtenerTotalAciertos(matricula);
-        return total==0?0:aciertos/total;
+        return total==0?0:(aciertos/total)*10;
     }
 
     public static int obtenerTotalPreguntas(Integer folioExamen){
